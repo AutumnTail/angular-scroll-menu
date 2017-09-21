@@ -1,0 +1,15 @@
+:host {
+    display: block;
+    padding-top: 50px;
+    height: 100%;
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    background-color: #E2E2E2;
+}
+
+.car {
+    width: 800px;
+    background-image: url(http://buyersguide.caranddriver.com/media/assets/submodel/7814.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+}

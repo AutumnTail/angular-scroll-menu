@@ -1,0 +1,24 @@
+@import "../../../styles.scss";
+:host {
+    display: block;
+    margin: 50px;
+    width: calc(100% - 100px);
+    height: 400px;
+    background-color: white;
+    overflow: hidden;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+    @extend .box-shadow-3;
+}
+
+.scroller {
+    width: 100%;
+    height: inherit;
+    display: -webkit-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
