@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, Renderer2, HostListener } from '@angular/core';
 import { AnimationService } from '../services/animation.service';
 import { HTMLElementProperty, EasingFunctions } from '../services/animations';
 
@@ -16,12 +16,6 @@ export class ScrollDirective implements OnInit, OnDestroy {
   constructor(private elementRef: ElementRef, private renderer: Renderer2, private animationService: AnimationService) {
     this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "mousedown", (e) => this._onDragStart(e)));
     this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "touchstart", (e) => this._onDragStart(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "mousemove", (e) => this._onDragging(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "touchmove", (e) => this._onDragging(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "mouseup", (e) => this._onDragEnd(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "mouseout", (e) => this._onDragEnd(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "touchend", (e) => this._onDragEnd(e)));
-    this.listeners.push(this.renderer.listen(this.elementRef.nativeElement, "touchcancel", (e) => this._onDragEnd(e)));
   }
 
   ngOnInit() { }
@@ -32,21 +26,55 @@ export class ScrollDirective implements OnInit, OnDestroy {
     });
   }
 
-  _onDragStart(e) {
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(e) {
+    this._onDragging(e);
+  }
+
+  @HostListener('document:mouseup', ['$event'])
+  onMouseUp(e) {
+    this._onDragEnd(e);
+  }
+
+  @HostListener('document:mousecancel', ['$event'])
+  onMouseCancel(e) {
+    this._onDragEnd(e);
+  }
+
+  @HostListener('document:touchmove', ['$event'])
+  onTouchMove(e) {
+    this._onDragging(e);
+  }
+
+  @HostListener('document:touchend', ['$event'])
+  onTouchEnd(e) {
+    this._onDragEnd(e);
+  }
+
+  @HostListener('document:touchcancel', ['$event'])
+  onTouchCancel(e) {
+    this._onDragEnd(e);
+  }
+
+  _onDragStart(e: MouseEvent | TouchEvent) {
     this.animationService.cancel();
     this.startX = this._getX(e);
     this.startScrollLeft = this.elementRef.nativeElement.scrollLeft;
     this.startTime = 'now' in window.performance ? performance.now() : new Date().getTime();
+    e.stopPropagation();
+    e.preventDefault();
   }
 
-  _onDragging(e) {
+  _onDragging(e: MouseEvent | TouchEvent) {
     if (this.startX == null) return;
     let deltaX = this.startX - this._getX(e);
     let scrollLeft = this.startScrollLeft + deltaX;
     this.elementRef.nativeElement.scrollLeft = scrollLeft;
+    e.stopPropagation();
+    e.preventDefault();
   }
 
-  _onDragEnd(e) {
+  _onDragEnd(e: MouseEvent | TouchEvent) {
     if (this.startX == null) return;
     let deltaX = this.startX - this._getX(e);
     let deltaTime = Math.abs('now' in window.performance ? performance.now() : new Date().getTime() - this.startTime);
@@ -54,6 +82,8 @@ export class ScrollDirective implements OnInit, OnDestroy {
     this.animationService.animate(this.elementRef.nativeElement, HTMLElementProperty.scrollLeft, scrollLeft, 1000, EasingFunctions.easeOutQuad);
     this.startX = null;
     this.startScrollLeft = null;
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   _getX(e: MouseEvent | TouchEvent) {
