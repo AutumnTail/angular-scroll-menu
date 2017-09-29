@@ -79,7 +79,7 @@ export class ScrollDirective implements OnInit, OnDestroy {
     let deltaX = this.startX - this._getX(e);
     let deltaTime = Math.abs('now' in window.performance ? performance.now() : new Date().getTime() - this.startTime);
     let scrollLeft = this.elementRef.nativeElement.scrollLeft + deltaX;
-    this.animationService.animate(this.elementRef.nativeElement, HTMLElementProperty.scrollLeft, scrollLeft, 1000, EasingFunctions.easeOutQuad);
+    this.animationService.animate(this.elementRef.nativeElement, "scrollLeft", scrollLeft, 1000, EasingFunctions.easeOutQuad);
     this.startX = null;
     this.startScrollLeft = null;
     e.stopPropagation();
