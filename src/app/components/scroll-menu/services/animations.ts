@@ -20,10 +20,6 @@ Window.prototype.requestAnimFrame = function (callback) {
     };
 }
 
-export enum HTMLElementProperty {
-  scrollLeft
-}
-
 /**
 *  Github: https://github.com/AndrewRayCode/easing-utils/blob/master/src/easing.js
 *  Demo: http://andrewraycode.github.io/easing-utils/gh-pages/
