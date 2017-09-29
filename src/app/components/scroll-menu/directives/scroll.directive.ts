@@ -1,6 +1,6 @@
 import { Directive, ElementRef, OnInit, OnDestroy, Renderer2, HostListener } from '@angular/core';
 import { AnimationService } from '../services/animation.service';
-import { HTMLElementProperty, EasingFunctions } from '../services/animations';
+import { EasingFunctions } from '../services/animations';
 
 @Directive({
   selector: '[scroller]',
